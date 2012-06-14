@@ -38,16 +38,18 @@ public class ArbitraryParameterValue extends StringParameterValue {
     public void buildEnvVars(AbstractBuild<?, ?> build, EnvVars env) {
         InputStream is = new ByteArrayInputStream(getValue().getBytes(Charset.defaultCharset() ) );
         Properties props = new Properties();
+        
+        // Throw a runtime exception, since overridden method declares no excep.
         try {
             props.load(is);            
-        } catch (IOException e) {
-            // TODO error
-        }
+        } catch (IOException ex) { throw new RuntimeException(ex); }
         
         env.remove(getName());
         env.putAll((Map) props);
 
-        try { is.close(); } catch (IOException e) {} // TODO error
+        try { 
+            is.close(); 
+        } catch (IOException ex) { throw new RuntimeException(ex); }
  
     }
     
